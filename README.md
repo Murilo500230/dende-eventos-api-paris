@@ -50,11 +50,11 @@ Este projeto depende do framework educacional:
 
 **Integrantes do Time:**
 
-1. ____________________________________
-2. ____________________________________
-3. ____________________________________
-4. ____________________________________
-5. ____________________________________
+1. Murilo Bastos Ferreira
+2. Patrick Dias de Deus
+3. Darlan de Jesus Malta
+4. Jailton dos Santos Silva Junior
+5. Cahuan Gomes Gonçalves
 
 ---
 
