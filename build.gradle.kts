@@ -1,6 +1,12 @@
 plugins {
     id("java")
 }
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+
 
 group = "br.com.softhouse.dende"
 version = "1.0-SNAPSHOT"
