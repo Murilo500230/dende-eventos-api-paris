@@ -38,7 +38,7 @@ public class IngressoController {
     // US 14 e 15: Comprar Ingresso (Gerar Venda)
     @PostMapping(path = "/comprar")
     public ResponseEntity<String> comprarIngresso(@RequestBody Venda venda) {
-        // Aqui a lógica simplificada para o trabalho:
+        
         repositorio.salvarVenda(venda);
         return ResponseEntity.ok("Compra realizada com sucesso para o usuario: " + venda.getEmailUsuario());
     }

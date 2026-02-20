@@ -7,15 +7,15 @@ public class Evento {
     private Long id;
     private String nome;
     private String descricao;
-    private String paginaEvento; // US 7
-    private LocalDateTime dataHora; // Representa a Data de Início
-    private LocalDateTime dataHoraFim; // US 7
-    private Localidade localidade; // US 7
-    private String categoria; // SOCIAL, CORPORATIVO, etc.
-    private String modalidade; // PRESENCIAL, REMOTO ou HÍBRIDO
-    private int capacidadeMaxima; // US 7
-    private double precoIngresso; // US 7
-    private boolean ativo = false; // Status para US 9 e 10
+    private String paginaEvento; 
+    private LocalDateTime dataHora; 
+    private LocalDateTime dataHoraFim; 
+    private Localidade localidade;
+    private String categoria; 
+    private String modalidade;
+    private int capacidadeMaxima; 
+    private double precoIngresso; 
+    private boolean ativo = false; 
     private String emailOrganizador; 
 
     public Evento() {}

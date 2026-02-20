@@ -9,7 +9,7 @@ import br.com.dende.softhouse.annotations.request.RequestMapping;
 import br.com.dende.softhouse.annotations.request.PathVariable;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.model.Usuario;
-import br.com.softhouse.dende.model.Organizador; // Import necessário para a US 5
+import br.com.softhouse.dende.model.Organizador; 
 import br.com.softhouse.dende.repositories.Repositorio;
 
 @Controller
@@ -36,7 +36,7 @@ public class UsuarioController {
     public ResponseEntity<Object> getUsuario(@PathVariable(parameter = "email") String email) {
         Usuario usuario = repositorio.buscarUsuarioPorEmail(email);
         if (usuario == null) {
-            // Tenta buscar como organizador caso não ache no mapa de usuário comum
+            
             usuario = repositorio.buscarOrganizadorPorEmail(email);
         }
         
@@ -64,10 +64,10 @@ public class UsuarioController {
         return ResponseEntity.ok("Usuario " + email + " alterado com sucesso!");
     }
 
-    // --- US 5: Desativar Conta com Trava de Segurança ---
+    
     @PutMapping(path = "/{email}/desativar")
     public ResponseEntity<String> desativarUsuario(@PathVariable(parameter = "email") String email) {
-        // Busca o usuário (pode ser comum ou organizador)
+        
         Usuario usuario = repositorio.buscarUsuarioPorEmail(email);
         if (usuario == null) usuario = repositorio.buscarOrganizadorPorEmail(email);
 
@@ -75,7 +75,7 @@ public class UsuarioController {
             return ResponseEntity.ok("Usuario inexistente");
         }
 
-        // REGRA DA US 5: Organizador não pode desativar se tiver eventos ativos
+        
         if (usuario instanceof Organizador) {
             boolean temEventosAtivos = repositorio.listarTodosEventos().stream()
                 .anyMatch(e -> e.getEmailOrganizador().equals(email) && e.isAtivo());
@@ -89,7 +89,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Conta de " + email + " desativada com sucesso!");
     }
 
-    // --- US 6: Reativar Conta ---
+    
     @PutMapping(path = "/{email}/reativar")
     public ResponseEntity<String> reativarUsuario(@PathVariable(parameter = "email") String email) {
         Usuario usuario = repositorio.buscarUsuarioPorEmail(email);

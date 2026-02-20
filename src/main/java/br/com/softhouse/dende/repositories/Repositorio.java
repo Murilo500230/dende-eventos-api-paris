@@ -34,7 +34,7 @@ public class Repositorio {
     // --- MÉTODOS DE USUÁRIO E ORGANIZADOR ---
 
     public void salvarUsuario(Usuario usuario) {
-        validarEmailUnico(usuario.getEmail()); // Atende US 1
+        validarEmailUnico(usuario.getEmail()); 
         usuariosComum.put(usuario.getEmail(), usuario);
     }
 
@@ -43,7 +43,7 @@ public class Repositorio {
     }
 
     public void salvarOrganizador(Organizador organizador) {
-        validarEmailUnico(organizador.getEmail()); // Atende US 2
+        validarEmailUnico(organizador.getEmail()); 
         organizadores.put(organizador.getEmail(), organizador);
     }
 
@@ -51,17 +51,16 @@ public class Repositorio {
         return organizadores.get(email);
     }
 
-    // Mudança solicitada para validar e-mail único (US 1 e 2)
+    
     private void validarEmailUnico(String email) {
         if (usuariosComum.containsKey(email) || organizadores.containsKey(email)) {
             throw new RuntimeException("ERRO: Este e-mail já está em uso!"); 
         }
     }
 
-    // --- MÉTODOS DE EVENTO ---
 
     public void salvarEvento(Evento evento) {
-        // Validação da US 7 antes de salvar
+        
         if (!evento.isValido()) {
             throw new RuntimeException("ERRO: Evento inválido (verifique datas e duração mínima de 30min).");
         }
@@ -80,10 +79,10 @@ public class Repositorio {
         return eventos.values();
     }
 
-    // Ajuste US 10: Se desativar/excluir, tratar ingressos
+    // Se desativar/excluir, tratar ingressos
     public void excluirEvento(Long id) {
         eventos.remove(id);
-        // Regra da US 10: Ingressos devem ser cancelados se o evento sair do ar
+        // Ingressos devem ser cancelados se o evento sair do ar
         ingressos.values().removeIf(i -> i.getEventoId().equals(id));
     }
 
