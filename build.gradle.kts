@@ -20,6 +20,7 @@ dependencies {
     implementation("io.github.lasilva:dendeframework:1.0.2")
     implementation("com.mysql:mysql-connector-j:8.4.0")
     implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("io.github.classgraph:classgraph:4.8.179")  
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
     testCompileOnly("org.projectlombok:lombok:1.18.34")

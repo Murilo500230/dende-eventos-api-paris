@@ -1,37 +1,28 @@
 package br.com.softhouse.dende.repositories.util;
 
-import br.com.dende.softhouse.annotations.Value;
-import br.com.dende.softhouse.annotations.Component;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-@Component
 public class ConfigProperties {
 
-    @Value(key = "datasource.url")
-    private String url;
+    private final Properties properties = new Properties();
 
-    @Value(key = "datasource.username")
-    private String username;
+    public ConfigProperties() {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+            if (input != null) {
+                properties.load(input);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar application.properties", e);
+        }
+    }
 
-    @Value(key = "datasource.password")
-    private String password;
-
-    @Value(key = "datasource.driver-class-name")
-    private String driverClassName;
-
-    @Value(key = "datasource.hikari.maximum-pool-size")
-    private int maximumPoolSize;
-
-    @Value(key = "datasource.hikari.minimum-idle")
-    private int minimumIdle;
-
-    @Value(key = "datasource.hikari.connection-timeout")
-    private long connectionTimeout;
-
-    public String getUrl() { return url; }
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public String getDriverClassName() { return driverClassName; }
-    public int getMaximumPoolSize() { return maximumPoolSize; }
-    public int getMinimumIdle() { return minimumIdle; }
-    public long getConnectionTimeout() { return connectionTimeout; }
+    public String getUrl() { return properties.getProperty("datasource.url"); }
+    public String getUsername() { return properties.getProperty("datasource.username"); }
+    public String getPassword() { return properties.getProperty("datasource.password"); }
+    public String getDriverClassName() { return properties.getProperty("datasource.driver-class-name"); }
+    public int getMaximumPoolSize() { return Integer.parseInt(properties.getProperty("datasource.hikari.maximum-pool-size")); }
+    public int getMinimumIdle() { return Integer.parseInt(properties.getProperty("datasource.hikari.minimum-idle")); }
+    public long getConnectionTimeout() { return Long.parseLong(properties.getProperty("datasource.hikari.connection-timeout")); }
 }
