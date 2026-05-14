@@ -6,22 +6,24 @@ import br.com.dende.softhouse.annotations.request.RequestBody;
 import br.com.dende.softhouse.annotations.request.RequestMapping;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.model.Organizador;
-import br.com.softhouse.dende.repositories.Repositorio;
+import br.com.softhouse.dende.repositories.OrganizadorRepository;
+import br.com.softhouse.dende.repositories.util.ConfigProperties;
 
 @Controller
 @RequestMapping(path = "/organizadores")
 public class OrganizadorController {
 
-    private final Repositorio repositorio;
+    private final OrganizadorRepository organizadorRepository;
 
     public OrganizadorController() {
-        this.repositorio = Repositorio.getInstance();
+        ConfigProperties props = new ConfigProperties();
+        this.organizadorRepository = new OrganizadorRepository(props);
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastroOrganizador(@RequestBody Organizador organizador){
+    public ResponseEntity<String> cadastroOrganizador(@RequestBody Organizador organizador) {
         try {
-            repositorio.salvarOrganizador(organizador);
+            organizadorRepository.salvar(organizador);
             return ResponseEntity.ok("Organizador " + organizador.getEmail() + " registrado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.ok("ERRO: " + e.getMessage());

@@ -3,43 +3,50 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.exceptions.EventoNaoEncontradoException;
 import br.com.softhouse.dende.model.Ingresso;
 import br.com.softhouse.dende.model.Venda;
-import br.com.softhouse.dende.repositories.Repositorio;
+import br.com.softhouse.dende.repositories.IngressoRepository;
+import br.com.softhouse.dende.repositories.EventoRepository;
+import br.com.softhouse.dende.repositories.VendaRepository;
+import br.com.softhouse.dende.repositories.util.ConfigProperties;
 import java.util.Collection;
 
 @Controller
 @RequestMapping(path = "/ingressos")
 public class IngressoController {
 
-    private final Repositorio repositorio;
+    private final IngressoRepository ingressoRepository;
+    private final EventoRepository eventoRepository;
+    private final VendaRepository vendaRepository;
 
     public IngressoController() {
-        this.repositorio = Repositorio.getInstance();
+        ConfigProperties props = new ConfigProperties();
+        this.ingressoRepository = new IngressoRepository(props);
+        this.eventoRepository = new EventoRepository(props);
+        this.vendaRepository = new VendaRepository(props);
     }
 
-    // US 12: Criar Ingresso para um Evento
     @PostMapping
     public ResponseEntity<String> criarIngresso(@RequestBody Ingresso ingresso) {
-        if (repositorio.buscarEventoPorId(ingresso.getEventoId()) == null) {
+        try {
+            eventoRepository.buscarPorId(ingresso.getEventoId());
+            ingressoRepository.salvar(ingresso);
+            return ResponseEntity.ok("Ingresso do tipo " + ingresso.getTipo() + " criado com sucesso!");
+        } catch (EventoNaoEncontradoException e) {
             return ResponseEntity.ok("Erro: Evento não encontrado para este ingresso.");
         }
-        repositorio.salvarIngresso(ingresso);
-        return ResponseEntity.ok("Ingresso do tipo " + ingresso.getTipo() + " criado com sucesso!");
     }
 
-    // US 13: Listar Ingressos de um Evento específico
     @GetMapping(path = "/evento/{eventoId}")
     public ResponseEntity<Collection<Ingresso>> listarPorEvento(@PathVariable(parameter = "eventoId") String eventoId) {
         Long id = Long.parseLong(eventoId);
-        return ResponseEntity.ok(repositorio.listarIngressosPorEvento(id));
+        return ResponseEntity.ok(ingressoRepository.listarPorEvento(id));
     }
 
-    // US 14 e 15: Comprar Ingresso (Gerar Venda)
     @PostMapping(path = "/comprar")
     public ResponseEntity<String> comprarIngresso(@RequestBody Venda venda) {
-        
-        repositorio.salvarVenda(venda);
+        vendaRepository.salvar(venda);
         return ResponseEntity.ok("Compra realizada com sucesso para o usuario: " + venda.getEmailUsuario());
     }
 }

@@ -8,43 +8,46 @@ import br.com.dende.softhouse.annotations.request.RequestBody;
 import br.com.dende.softhouse.annotations.request.RequestMapping;
 import br.com.dende.softhouse.annotations.request.PathVariable;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.exceptions.EventoNaoEncontradoException;
 import br.com.softhouse.dende.model.Evento;
-import br.com.softhouse.dende.repositories.Repositorio;
+import br.com.softhouse.dende.repositories.EventoRepository;
+import br.com.softhouse.dende.repositories.util.ConfigProperties;
 import java.util.Collection;
 
 @Controller
 @RequestMapping(path = "/eventos")
 public class EventoController {
 
-    private final Repositorio repositorio;
+    private final EventoRepository eventoRepository;
 
     public EventoController() {
-        this.repositorio = Repositorio.getInstance();
+        ConfigProperties props = new ConfigProperties();
+        this.eventoRepository = new EventoRepository(props);
     }
 
-    // US 7: Criar Evento
     @PostMapping
     public ResponseEntity<String> criarEvento(@RequestBody Evento evento) {
-        repositorio.salvarEvento(evento);
-        return ResponseEntity.ok("Evento '" + evento.getNome() + "' criado com sucesso!");
+        try {
+            eventoRepository.salvar(evento);
+            return ResponseEntity.ok("Evento '" + evento.getNome() + "' criado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.ok("ERRO: " + e.getMessage());
+        }
     }
 
-    // US 9: Listar todos os Eventos
     @GetMapping
     public ResponseEntity<Collection<Evento>> listarEventos() {
-        return ResponseEntity.ok(repositorio.listarTodosEventos());
+        return ResponseEntity.ok(eventoRepository.listarTodos());
     }
 
-    // US 10: Consultar detalhes de um Evento
     @GetMapping(path = "/{id}")
     public ResponseEntity<Object> consultarEvento(@PathVariable(parameter = "id") String id) {
         try {
             Long idLong = Long.parseLong(id);
-            Evento evento = repositorio.buscarEventoPorId(idLong);
-            if (evento == null) {
-                return ResponseEntity.ok("Evento não encontrado");
-            }
+            Evento evento = eventoRepository.buscarPorId(idLong);
             return ResponseEntity.ok(evento);
+        } catch (EventoNaoEncontradoException e) {
+            return ResponseEntity.ok("Evento não encontrado");
         } catch (NumberFormatException e) {
             return ResponseEntity.ok("ID inválido");
         }
